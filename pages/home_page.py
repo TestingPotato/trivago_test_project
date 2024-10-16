@@ -1,18 +1,13 @@
-import pytest
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from .base_page import BasePage
 
 
-@pytest.fixture(scope="module")
-def setup():
-    # Set up the Chrome WebDriver
-    service = Service(executable_path=r"C:\test\chromedriver.exe")
+class HomePage(BasePage):
+    DESTINATION_INPUT = (By.ID, "input-auto-complete")
+    DROPDOWN_OPTION = (By.XPATH, '//span[@class="Qrvi3L"]')
 
-    # Initialize the WebDriver with the service
-    driver = webdriver.Chrome(service=service)
-    driver.get("https://www.trivago.com/en-US")
-    driver.implicitly_wait(5)
-    yield driver  # This allows the test to run using this driver instance
+    def enter_destination(self, destination):
+        self.wait_for_element(self.DESTINATION_INPUT).send_keys(destination)
 
-    # Teardown
-    driver.quit()
+    def select_destination(self):
+        self.wait_for_element(self.DROPDOWN_OPTION).click()
